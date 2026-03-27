@@ -1,0 +1,12 @@
+# bootc-image-builder configuration for vSphere VMDK output
+
+# Force xfs instead of Fedora's default btrfs (vSphere compatibility)
+[[customizations.filesystem]]
+mountpoint = "/"
+minsize = "10 GiB"
+type = "xfs"
+
+[[customizations.user]]
+name = "cloud-user"
+groups = ["wheel"]
+key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDNaLymjM4f4SyF7dYRGmpgsXlI/Y7YzOmjckyoPWwh5lFkH4zGjPoSIi4khRn4mA1pXSGrMHcb4JeknoRQ3xVbe7HGYSU8L4mWGcgYOYqHk7CSzFUkriC7Z0e1RPQ9LNg9tgyVvsMmat/UGp3gI671DUebz1sQMHGlRnfy8nU4mfsE/1An+ahG5ASWQDIlNiSVV8CjZK8Np+Y86yaqb+7wl1eoyfGldtxnQZBFKcEPv9tkmIaekKlHxuCpIlt7XxnnxZe268L6l7f4ah7uI+V58+9RG8dmpUdVTigJps1DsWe5BONukHWMdiZxsyIDd0dhV17dO96MI3xAE7iEVhf9/0Xt55v2xD0E4rAJ4zwH0IXImAljHBRf8tItn+4pCN6Cyt2xE/3h8E7LMMQ4AiR41UaOsb8N1EcQHrJDxmFrJdvOEvnKGLtBAhSltY4UPQ6OZZ9K0DkhIfEfNSfJ/Gbbb1OhU2C4Gg4k5MyvMYkmbBjZuCQ9Orqn7j/G+/sOiNk= rgolan@fedora"

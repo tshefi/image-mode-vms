@@ -1,0 +1,5 @@
+.vmdk
+.qcow2
+*.qcow2
+*.vmdk
+output/

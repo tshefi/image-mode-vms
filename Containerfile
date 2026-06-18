@@ -1,16 +1,18 @@
-FROM quay.io/fedora/fedora-bootc:42
+FROM quay.io/fedora/fedora-bootc:43
 
-# VMware tools for vSphere integration
 RUN dnf install -y \
     open-vm-tools \
     cloud-init \
     cloud-utils-growpart \
+    firefox \
+    @cinnamon-desktop-environment \
     && dnf clean all
 
 # Enable VMware tools and cloud-init for first-boot config
 RUN systemctl enable vmtoolsd.service \
-    && systemctl enable cloud-init.service \
+    && systemctl enable cloud-init-main.service \
     && systemctl enable cloud-init-local.service \
+    && systemctl enable cloud-init-network.service \
     && systemctl enable cloud-config.service \
     && systemctl enable cloud-final.service
 

@@ -7,16 +7,18 @@ VM_DISPLAYNAME="${3}"
 VM_MEMORY_MB="${4}"
 VM_CPUS="${5}"
 VM_DISK_SIZE_GB="${6}"
+VMDK_PATH="${7}"  # Path relative to OUTPUT_DIR (e.g., vmdk/disk.vmdk)
 
-VMDK_FILE="disk.vmdk"
+# Extract just the filename for OVF reference
+VMDK_FILE="$(basename "${VMDK_PATH}")"
 OVF_FILE="${OUTPUT_DIR}/${VM_NAME}.ovf"
 
-# Get VMDK file size
-VMDK_SIZE=$(stat -c%s "${OUTPUT_DIR}/${VMDK_FILE}")
+# Get VMDK file size (using full path)
+VMDK_SIZE=$(stat -c%s "${OUTPUT_DIR}/${VMDK_PATH}")
 VMDK_CAPACITY=$((VM_DISK_SIZE_GB * 1024 * 1024 * 1024))
 
-# Generate SHA256 for VMDK
-VMDK_SHA256=$(sha256sum "${OUTPUT_DIR}/${VMDK_FILE}" | cut -d' ' -f1)
+# Generate SHA256 for VMDK (using full path)
+VMDK_SHA256=$(sha256sum "${OUTPUT_DIR}/${VMDK_PATH}" | cut -d' ' -f1)
 
 # Create OVF descriptor
 cat > "${OVF_FILE}" << EOF

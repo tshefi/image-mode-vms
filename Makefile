@@ -9,7 +9,7 @@ VM_GUEST_OS ?= fedora-64
 OUTPUT_DIR ?= ./output
 
 # Derived filenames
-VMDK_DISK = disk.vmdk
+VMDK_DISK = vmdk/disk.vmdk
 VMX_FILE = $(OUTPUT_DIR)/$(VM_NAME).vmx
 OVF_FILE = $(OUTPUT_DIR)/$(VM_NAME).ovf
 OVA_FILE = $(OUTPUT_DIR)/$(VM_NAME).ova
@@ -52,9 +52,11 @@ vmdk-vmx: vmdk
 # Build VMDK + create OVF + package as OVA for vSphere
 vmdk-ova: vmdk
 	@echo "==> Creating OVF descriptor..."
-	@./create-ovf.sh "$(OUTPUT_DIR)" "$(VM_NAME)" "$(VM_DISPLAYNAME)" "$(VM_MEMORY_MB)" "$(VM_CPUS)" "$(VM_DISK_SIZE_GB)"
+	@./create-ovf.sh "$(OUTPUT_DIR)" "$(VM_NAME)" "$(VM_DISPLAYNAME)" "$(VM_MEMORY_MB)" "$(VM_CPUS)" "$(VM_DISK_SIZE_GB)" "$(VMDK_DISK)"
+	@echo "==> Copying VMDK to output root for OVA packaging..."
+	@cp "$(OUTPUT_DIR)/$(VMDK_DISK)" "$(OUTPUT_DIR)/disk.vmdk"
 	@echo "==> Packaging OVA..."
-	@cd $(OUTPUT_DIR) && tar -cvf $(VM_NAME).ova $(VM_NAME).ovf $(VMDK_DISK)
+	@cd $(OUTPUT_DIR) && tar -cvf $(VM_NAME).ova $(VM_NAME).ovf disk.vmdk
 	@echo "==> OVA created: $(OVA_FILE)"
 	@echo "    Upload and deploy this to vSphere/ESXi"
 
@@ -62,7 +64,7 @@ build:
 	podman build . --tag quay.io/tshefi/fedora-image-mode-vm
 
 clean-vm:
-	rm -f $(VMX_FILE) $(OVF_FILE) $(OVA_FILE)
+	rm -f $(VMX_FILE) $(OVF_FILE) $(OVA_FILE) $(OUTPUT_DIR)/disk.vmdk
 
 help:
 	@echo "Available targets:"

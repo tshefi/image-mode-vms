@@ -35,6 +35,9 @@ sudo podman run \
     --config /config.toml \
     "${IMAGE_NAME}:${IMAGE_TAG}"
 
+echo "==> Fixing ownership of output files..."
+sudo chown -R "${USER}:${USER}" "${OUTPUT_DIR}"
+
 echo "==> Done! $IMAGE_TYPE is in ${OUTPUT_DIR}/"
 if [[ $IMAGE_TYPE = "vmdk" ]]; then
     echo "    Upload the .${IMAGE_TYPE} file to your vSphere datastore and create a VM from it."

@@ -1,10 +1,5 @@
 # bootc-image-builder configuration for vSphere VMDK output
-
-# Force xfs instead of Fedora's default btrfs (MTV compatibility)
-[[customizations.filesystem]]
-mountpoint = "/"
-minsize = "10 GiB"
-type = "xfs"
+# Note: Filesystem type is set via --rootfs xfs flag, not here
 
 [[customizations.user]]
 name = "cloud-user"

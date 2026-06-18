@@ -6,6 +6,13 @@ IMAGE_NAME="${IMAGE_NAME:-localhost/fedora-vsphere-vm}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 OUTPUT_DIR="${OUTPUT_DIR:-./output}"
 
+# Use different config for vmdk (filesystem customization not supported)
+if [[ $IMAGE_TYPE = "vmdk" ]]; then
+    CONFIG_FILE="${PWD}/config-vmdk.toml"
+else
+    CONFIG_FILE="${PWD}/config.toml"
+fi
+
 echo "==> Building bootc container image: ${IMAGE_NAME}:${IMAGE_TAG}"
 sudo podman build --network host -t "${IMAGE_NAME}:${IMAGE_TAG}" .
 
@@ -19,7 +26,7 @@ sudo podman run \
     --pull=newer \
     --security-opt label=type:unconfined_t \
     -v "${OUTPUT_DIR}":/output \
-    -v "${PWD}/config.toml":/config.toml \
+    -v "${CONFIG_FILE}":/config.toml \
     -v "/var/lib/containers/storage":/var/lib/containers/storage \
     quay.io/centos-bootc/bootc-image-builder:latest \
     --verbose \
